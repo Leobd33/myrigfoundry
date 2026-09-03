@@ -1,17 +1,265 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
 
+const categories = [
+  {
+    title: "Performance",
+    description: "Fix stutters, freezes, FPS drops and weird slowdowns.",
+    href: "/performance/",
+    icon: "⚡",
+  },
+  {
+    title: "Storage",
+    description: "Solve SSD, NVMe, disk usage and storage problems.",
+    href: "/storage/",
+    icon: "▣",
+  },
+  {
+    title: "Internet & Networking",
+    description: "Fix slow Wi-Fi, Ethernet issues, ping and disconnects.",
+    href: "/networking/",
+    icon: "⌁",
+  },
+  {
+    title: "RAM & BIOS",
+    description: "Understand EXPO, XMP, boot issues and memory problems.",
+    href: "/ram-bios/",
+    icon: "▤",
+  },
+  {
+    title: "GPU & Display",
+    description: "Fix black screens, refresh rates, drivers and monitors.",
+    href: "/gpu-display/",
+    icon: "◫",
+  },
+];
+
+const categoryRoutes = {
+  NETWORKING: "networking",
+  PERFORMANCE: "performance",
+  STORAGE: "storage",
+  "RAM & BIOS": "ram-bios",
+  "GPU & DISPLAY": "gpu-display",
+};
+
+const articles = await getCollection("articles");
+
+const latestFixes = articles.slice(0, 6).map((article) => {
+  const route =
+    categoryRoutes[
+      article.data.category as keyof typeof categoryRoutes
+    ];
+
+  return {
+    category: article.data.category,
+    title: article.data.title,
+    description: article.data.description,
+    href: `/${route}/${article.id}/`,
+  };
+});
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">
+          PC troubleshooting made clear
+        </p>
+
+        <h1>
+          PC problems,<br />
+          explained.
+        </h1>
+
+        <p class="hero-description">
+          Step-by-step fixes for the problems that actually happen.
+          Understand what's wrong, fix it properly, and upgrade only when
+          it makes sense.
+        </p>
+
+        <form
+          class="search-box"
+          id="search"
+          action="/search/"
+          method="get"
+        >
+          <input
+            type="search"
+            name="q"
+            aria-label="Search your PC problem"
+            placeholder="Search your PC problem..."
+            required
+          />
+
+          <button type="submit">
+            Search
+          </button>
+        </form>
+      </div>
+
+      <div class="hero-visual">
+        <div class="pc-card"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="categories" id="guides">
+    <div class="container">
+      <div class="category-grid">
+        {
+          categories.map((category) => (
+            <a
+              class="category-card"
+              href={category.href}
+            >
+              <div class="category-icon">
+                {category.icon}
+              </div>
+
+              <h3>{category.title}</h3>
+
+              <p>{category.description}</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="latest" id="fixes">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">
+            Troubleshooting
+          </p>
+
+          <h2>
+            Latest fixes
+          </h2>
+        </div>
+
+        <p>
+          Specific PC problems, clear explanations and practical solutions
+          without wasting your time.
+        </p>
+      </div>
+
+      <div class="article-grid">
+        {
+          latestFixes.map((article) => (
+            <a
+              class="article-card"
+              href={article.href}
+            >
+              <span class="article-category">
+                {article.category}
+              </span>
+
+              <h3>
+                {article.title}
+              </h3>
+
+              <p>
+                {article.description}
+              </p>
+
+              <span class="read-more">
+                Read the fix →
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="hardware" id="hardware">
+    <div class="container hardware-grid">
+      <div>
+        <p class="eyebrow">
+          Hardware & upgrades
+        </p>
+
+        <h2>
+          Upgrade with confidence.
+        </h2>
+
+        <p>
+          Hardware recommendations built around real use cases — not just
+          bigger numbers. Learn what matters before spending your money.
+        </p>
+
+        <a href="#" class="hardware-button">
+          Explore hardware guides →
+        </a>
+      </div>
+
+      <div class="hardware-box">
+        <small>
+          BUY SMARTER
+        </small>
+
+        <h3>
+          Know when an upgrade actually makes sense.
+        </h3>
+
+        <p>
+          Compare SSDs, RAM, GPUs, networking hardware, monitors and more
+          with practical explanations before you buy.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pillars" id="about">
+    <div class="container pillar-grid">
+      <div class="pillar">
+        <span class="pillar-number">
+          01
+        </span>
+
+        <h3>
+          Understand the problem.
+        </h3>
+
+        <p>
+          Learn what is actually happening inside your PC before changing
+          random settings.
+        </p>
+      </div>
+
+      <div class="pillar">
+        <span class="pillar-number">
+          02
+        </span>
+
+        <h3>
+          Fix it step by step.
+        </h3>
+
+        <p>
+          Follow practical troubleshooting from the most likely cause to
+          the less obvious ones.
+        </p>
+      </div>
+
+      <div class="pillar">
+        <span class="pillar-number">
+          03
+        </span>
+
+        <h3>
+          Upgrade when it makes sense.
+        </h3>
+
+        <p>
+          Spend money only when hardware is really the solution to the
+          problem.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

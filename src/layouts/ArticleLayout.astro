@@ -1,0 +1,135 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  category: string;
+  categoryName: string;
+  categoryUrl: string;
+  updated?: string;
+  headings?: Heading[];
+}
+
+const {
+  title,
+  description,
+  category,
+  categoryName,
+  categoryUrl,
+  updated = "September 1, 2026",
+  headings = [],
+} = Astro.props;
+
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).toString()
+  : undefined;
+
+const socialImagePath =
+  "/images/articles/wifi-slow-pc-fast-phone/wifi-slow-pc-fast-phone-diagnosis.png";
+
+const socialImage = Astro.site
+  ? new URL(socialImagePath, Astro.site).toString()
+  : undefined;
+
+const articleSchema = canonical
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: title,
+      description,
+      url: canonical,
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": canonical,
+      },
+      dateModified: updated,
+      author: {
+        "@type": "Organization",
+        name: "MyRigFoundry",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "MyRigFoundry",
+      },
+      ...(socialImage && {
+        image: [socialImage],
+      }),
+    }
+  : null;
+---
+
+<BaseLayout
+  title={`${title} | MyRigFoundry`}
+  description={description}
+  canonical={canonical}
+  image={socialImage}
+  type="article"
+>
+  {
+    articleSchema && (
+      <script
+        slot="head"
+        type="application/ld+json"
+        set:html={JSON.stringify(articleSchema)}
+      />
+    )
+  }
+
+  <article class="article-page">
+    <div class="article-container">
+      <div class="article-breadcrumbs">
+        <a href="/">Home</a>
+        <span>›</span>
+        <a href={categoryUrl}>{categoryName}</a>
+      </div>
+
+      <header class="article-header">
+        <span class="article-category">{category}</span>
+
+        <h1>{title}</h1>
+
+        <p class="article-lead">
+          {description}
+        </p>
+
+        <div class="article-meta">
+          Updated {updated} · MyRigFoundry
+        </div>
+      </header>
+
+      {
+        headings.length > 0 && (
+          <nav
+            class="article-toc"
+            aria-label="Table of contents"
+          >
+            <span class="article-toc-title">
+              IN THIS GUIDE
+            </span>
+
+            <ol>
+              {headings.map((heading) => (
+                <li>
+                  <a href={`#${heading.slug}`}>
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+
+      <div class="article-content">
+        <slot />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

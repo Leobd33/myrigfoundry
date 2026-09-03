@@ -1,0 +1,203 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const categoryRoutes = {
+  NETWORKING: "networking",
+  PERFORMANCE: "performance",
+  STORAGE: "storage",
+  "RAM & BIOS": "ram-bios",
+  "GPU & DISPLAY": "gpu-display",
+};
+
+const articles = await getCollection("articles");
+
+const searchableArticles = articles.map((article) => {
+  const route =
+    categoryRoutes[
+      article.data.category as keyof typeof categoryRoutes
+    ];
+
+  return {
+    title: article.data.title,
+    description: article.data.description,
+    category: article.data.category,
+    href: `/${route}/${article.id}/`,
+  };
+});
+---
+
+<BaseLayout
+  title="Search | MyRigFoundry"
+  description="Search MyRigFoundry troubleshooting guides by PC problem, category or keyword."
+>
+  <section class="search-page">
+    <div class="container">
+      <p class="eyebrow">
+        SEARCH MYRIGFOUNDRY
+      </p>
+
+      <h1>
+        Find your PC problem.
+      </h1>
+
+      <p class="search-page-intro">
+        Search our troubleshooting guides by problem, component or category.
+      </p>
+
+      <form
+        class="search-page-box"
+        action="/search/"
+        method="get"
+      >
+        <input
+          id="article-search"
+          type="search"
+          name="q"
+          placeholder="Try: slow Wi-Fi, stutter, SSD..."
+          aria-label="Search MyRigFoundry articles"
+          autocomplete="off"
+        />
+
+        <button
+          class="search-page-button"
+          type="submit"
+        >
+          Search
+        </button>
+      </form>
+
+      <p
+        id="search-status"
+        class="search-status"
+      >
+        Start typing to search the site.
+      </p>
+
+      <div
+        id="search-results"
+        class="search-results"
+      >
+        {
+          searchableArticles.map((article) => (
+            <a
+              class="search-result-card"
+              href={article.href}
+              data-search={`${article.title} ${article.description} ${article.category}`}
+            >
+              <span class="article-category">
+                {article.category}
+              </span>
+
+              <h2>
+                {article.title}
+              </h2>
+
+              <p>
+                {article.description}
+              </p>
+
+              <span class="read-more">
+                Read the fix →
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const searchInput =
+      document.querySelector("#article-search");
+
+    const searchStatus =
+      document.querySelector("#search-status");
+
+    const resultCards =
+      document.querySelectorAll(".search-result-card");
+
+    function normalizeSearch(value) {
+      return String(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+    }
+
+    function filterResults(query) {
+      const normalizedQuery =
+        normalizeSearch(query);
+
+      let visibleResults = 0;
+
+      resultCards.forEach((card) => {
+        const searchableText =
+          normalizeSearch(
+            card.getAttribute("data-search") || ""
+          );
+
+        const matches =
+          normalizedQuery === "" ||
+          searchableText.includes(normalizedQuery);
+
+        card.style.display =
+          matches ? "block" : "none";
+
+        if (matches) {
+          visibleResults++;
+        }
+      });
+
+      if (normalizedQuery === "") {
+        searchStatus.textContent =
+          "Start typing to search the site.";
+
+        return;
+      }
+
+      if (visibleResults === 0) {
+        searchStatus.textContent =
+          `No guides found for "${query}".`;
+
+        return;
+      }
+
+      searchStatus.textContent =
+        `${visibleResults} guide${
+          visibleResults === 1 ? "" : "s"
+        } found for "${query}".`;
+    }
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const initialQuery =
+      params.get("q") || "";
+
+    if (searchInput) {
+      searchInput.value =
+        initialQuery;
+
+      filterResults(
+        initialQuery
+      );
+
+      searchInput.addEventListener(
+        "input",
+        (event) => {
+          const target =
+            event.target;
+
+          if (target instanceof HTMLInputElement) {
+            filterResults(
+              target.value
+            );
+          }
+        }
+      );
+    }
+  </script>
+</BaseLayout>

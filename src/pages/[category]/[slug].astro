@@ -1,0 +1,50 @@
+---
+import { getCollection, render } from "astro:content";
+import ArticleLayout from "../../layouts/ArticleLayout.astro";
+
+export async function getStaticPaths() {
+  const articles = await getCollection("articles");
+
+  const categoryRoutes = {
+    NETWORKING: "networking",
+    PERFORMANCE: "performance",
+    STORAGE: "storage",
+    "RAM & BIOS": "ram-bios",
+    "GPU & DISPLAY": "gpu-display",
+  };
+
+  return articles.map((article) => ({
+    params: {
+      category:
+        categoryRoutes[
+          article.data.category as keyof typeof categoryRoutes
+        ],
+      slug: article.id,
+    },
+
+    props: {
+      article,
+    },
+  }));
+}
+
+const { article } = Astro.props;
+
+const { Content, headings } = await render(article);
+
+const tableOfContents = headings.filter(
+  (heading) => heading.depth === 2
+);
+---
+
+<ArticleLayout
+  title={article.data.title}
+  description={article.data.description}
+  category={article.data.category}
+  categoryName={article.data.categoryName}
+  categoryUrl={article.data.categoryUrl}
+  updated={article.data.updated}
+  headings={tableOfContents}
+>
+  <Content />
+</ArticleLayout>

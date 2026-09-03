@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+interface Props {
+  category: string;
+  title: string;
+  description: string;
+  seoTitle: string;
+  seoDescription: string;
+  route: string;
+}
+
+const {
+  category,
+  title,
+  description,
+  seoTitle,
+  seoDescription,
+  route,
+} = Astro.props;
+
+const articles = await getCollection(
+  "articles",
+  ({ data }) => data.category === category
+);
+---
+
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+>
+  <section class="category-page">
+    <div class="container">
+      <p class="eyebrow">MyRigFoundry Fixes</p>
+
+      <h1>{title}</h1>
+
+      <p class="category-intro">
+        {description}
+      </p>
+
+      <div class="category-articles">
+        {
+          articles.map((article) => (
+            <a
+              class="category-article"
+              href={`/${route}/${article.id}/`}
+            >
+              <span class="article-category">
+                {category}
+              </span>
+
+              <h2>{article.data.title}</h2>
+
+              <p>{article.data.description}</p>
+
+              <span class="read-more">
+                Read the fix →
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
