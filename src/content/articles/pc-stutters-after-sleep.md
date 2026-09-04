@@ -4,7 +4,7 @@ description: "If your Windows PC becomes laggy or starts stuttering only after w
 category: "PERFORMANCE"
 categoryName: "Performance"
 categoryUrl: "/performance/"
-updated: "September 2, 2026"
+updated: "September 4, 2026"
 ---
 
 <div class="article-summary">
@@ -32,6 +32,17 @@ You might notice:
 When the problem appears **only after sleep**, troubleshooting should focus first on what changes during the sleep and resume process.
 
 Instead of immediately assuming that your CPU, GPU or RAM is too slow, use the steps below to isolate the component that is not resuming correctly.
+
+<figure class="article-figure">
+  <img
+    src="/images/articles/pc-stutters-after-sleep/pc-stutters-after-sleep-causes.png"
+    alt="Diagram explaining common causes of PC stuttering after waking from sleep, including graphics drivers, USB devices, displays and background software"
+    loading="lazy"
+  />
+  <figcaption>
+    Sleep-related stuttering can involve several parts of the system that must resume correctly, including graphics drivers, USB devices, displays and background software.
+  </figcaption>
+</figure>
 
 ## First, confirm that sleep is actually the trigger
 
@@ -107,6 +118,17 @@ Likewise, extremely high disk activity can make Windows feel unresponsive even w
 The goal is not to find one specific percentage that is always wrong.
 
 You are looking for something that is clearly different between the normal state and the stuttering state.
+
+<figure class="article-figure">
+  <img
+    src="/images/articles/pc-stutters-after-sleep/pc-stutters-after-sleep-windows-checks.png"
+    alt="Windows troubleshooting guide showing Task Manager, Device Manager, background applications, Windows Update and graphics driver checks for stuttering after sleep"
+    loading="lazy"
+  />
+  <figcaption>
+    Check the system while the stutter is happening. Task Manager, Device Manager and current Windows and graphics drivers can provide useful clues before you restart the PC.
+  </figcaption>
+</figure>
 
 ## Update Windows before deeper troubleshooting
 
