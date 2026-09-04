@@ -47,6 +47,17 @@ A drive can be extremely busy handling storage requests without transferring fil
 
 That is why you might see high disk activity while the transfer rate appears surprisingly low.
 
+<figure class="article-figure">
+  <img
+    src="/images/articles/ssd-100-usage-while-idle-windows-11/ssd-100-usage-active-time.png"
+    alt="Windows 11 Task Manager showing an SSD at 100 percent active time while read and write transfer speeds remain relatively low"
+    loading="lazy"
+  />
+  <figcaption>
+    100% active time does not necessarily mean the SSD is transferring data at its maximum speed. A drive can remain busy handling many storage requests while read and write speeds stay relatively low.
+  </figcaption>
+</figure>
+
 Instead of focusing only on the percentage, compare:
 
 - disk activity
@@ -421,6 +432,21 @@ Examples include:
 If important files are stored on a drive that is behaving abnormally, make sure those files are backed up before doing deeper troubleshooting.
 
 Do not wait for a storage device to completely stop working before protecting important data.
+
+## Visual troubleshooting flow
+
+If several possible causes seem to fit the problem, use this flow to narrow them down without changing multiple Windows settings at once.
+
+<figure class="article-figure">
+  <img
+    src="/images/articles/ssd-100-usage-while-idle-windows-11/ssd-100-usage-troubleshooting-flow.png"
+    alt="Troubleshooting flow for SSD at 100 percent usage while idle in Windows 11, starting with Task Manager and checking background activity, Windows settings, startup apps, SSD health and firmware"
+    loading="lazy"
+  />
+  <figcaption>
+    Start with Task Manager, identify the process responsible, rule out normal Windows background activity and only move toward SSD diagnostics when the high usage remains unexplained.
+  </figcaption>
+</figure>
 
 ## What to check first
 
